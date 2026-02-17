@@ -9,14 +9,16 @@ COPY resturant.presentation.client/ .
 RUN npm run build
 
 
-# ---------- Build .NET ----------
+# ---------- Build .NET (WITH NODE INSTALLED) ----------
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
+
+# Install Node in .NET build image (IMPORTANT FIX)
+RUN apt-get update && apt-get install -y curl
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
+
 WORKDIR /src
-
-COPY Resturant.Presentation.Server/Resturant.Presentation.Server.csproj Resturant.Presentation.Server/
-RUN dotnet restore Resturant.Presentation.Server/Resturant.Presentation.Server.csproj
-
 COPY . .
 WORKDIR /src/Resturant.Presentation.Server
 
