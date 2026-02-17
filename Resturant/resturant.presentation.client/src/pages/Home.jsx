@@ -11,14 +11,17 @@ function Test(message) {
     $.ajax({
         url:  API.POST,
         method: "POST",
-        data: JSON.stringify(message),
+        contentType: "application/json",   // important!
+        data: JSON.stringify(message),     // send raw string as JSON
         success: (res) => console.log("Response:", res),
         error: (err) => console.error(err)
     });
 }
+
+
 export default function Home() {
     const handleClick = () => {
-        Test("Hello from Home!");
+        Test("Hello from Home!23");
     };
 
     return (

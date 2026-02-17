@@ -6,7 +6,7 @@ const BASE_URL =
         : "https://ai-powered-resturant-ordering-system.onrender.com/";
 
 const API = {
-    POST: `${BASE_URL}api/Home/Post`,
+    POST: `${BASE_URL}api/Home/`,
     MENU: `${BASE_URL}api/menu`,
     ORDER: `${BASE_URL}api/order`,
 };
