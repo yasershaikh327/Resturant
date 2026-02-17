@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="resturant.presentation.client/resturant.presentation.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="Resturant.Presentation.Server/Resturant.Presentation.Server.csproj" />
+</Solution>
