@@ -9,7 +9,7 @@ function Test(message) {
 
     // Example AJAX call using jQuery
     $.ajax({
-        url: apiConfig + API.POST,
+        url:  API.POST,
         method: "POST",
         data: { value: message },
         success: (res) => console.log("Response:", res),
