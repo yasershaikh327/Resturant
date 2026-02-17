@@ -1,8 +1,10 @@
 # ---------- Build React ----------
 FROM node:20 AS client-build
 WORKDIR /client
+
 COPY resturant.presentation.client/package*.json ./
 RUN npm install
+
 COPY resturant.presentation.client/ .
 RUN npm run build
 
@@ -12,11 +14,9 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# Copy server project
 COPY Resturant.Presentation.Server/Resturant.Presentation.Server.csproj Resturant.Presentation.Server/
 RUN dotnet restore Resturant.Presentation.Server/Resturant.Presentation.Server.csproj
 
-# Copy everything
 COPY . .
 WORKDIR /src/Resturant.Presentation.Server
 
