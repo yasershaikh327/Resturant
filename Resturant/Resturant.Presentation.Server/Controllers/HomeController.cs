@@ -24,8 +24,9 @@ namespace Resturant.Presentation.Server.Controllers
 
         // POST api/<HomeController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public JsonResult Post([FromBody] string value)
         {
+            return new JsonResult("Value: " + value);
         }
 
         // PUT api/<HomeController>/5
