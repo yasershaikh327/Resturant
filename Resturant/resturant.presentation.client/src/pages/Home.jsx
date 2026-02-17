@@ -1,11 +1,32 @@
 import "../styles/main.css";
+import $ from "jquery"; 
+import apiConfig from "../config/apiConfig";
+import API from "../config/apiConfig";
 
+function Test(message) {
+    // Example usage: just log for now
+    console.log("Test called with:", message);
+
+    // Example AJAX call using jQuery
+    $.ajax({
+        url: apiConfig + API.POST,
+        method: "POST",
+        data: { value: message },
+        success: (res) => console.log("Response:", res),
+        error: (err) => console.error(err)
+    });
+}
 export default function Home() {
+    const handleClick = () => {
+        Test("Hello from Home!");
+    };
+
     return (
         <>
             <div className="hero">
                 <h1>Order Smart. Eat Smart.</h1>
                 <p>AI powered restaurant recommendations just for you.</p>
+                <button onClick={handleClick}>Run Test</button>
             </div>
 
             <div className="recommendation">
