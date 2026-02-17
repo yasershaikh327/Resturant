@@ -1,4 +1,4 @@
-# ----------- Build React -----------
+# ---------- Build React ----------
 FROM node:20 AS client-build
 WORKDIR /client
 COPY resturant.presentation.client/package*.json ./
@@ -7,18 +7,26 @@ COPY resturant.presentation.client/ .
 RUN npm run build
 
 
-# ----------- Build .NET -----------
+# ---------- Build .NET ----------
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
+# Copy server project
 COPY Resturant.Presentation.Server/Resturant.Presentation.Server.csproj Resturant.Presentation.Server/
 RUN dotnet restore Resturant.Presentation.Server/Resturant.Presentation.Server.csproj
 
+# Copy everything
 COPY . .
 WORKDIR /src/Resturant.Presentation.Server
-RUN dotnet publish -c Release -o /app/publish
+
+RUN dotnet publish Resturant.Presentation.Server.csproj \
+    -c $BUILD_CONFIGURATION \
+    -o /app/publish \
+    /p:UseAppHost=false
 
 
-# ----------- Final Image -----------
+# ---------- Final Runtime ----------
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 
