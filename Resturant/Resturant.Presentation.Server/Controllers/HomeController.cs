@@ -4,8 +4,8 @@
 
 namespace Resturant.Presentation.Server.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
         // GET: api/<HomeController>
@@ -24,9 +24,9 @@ namespace Resturant.Presentation.Server.Controllers
 
         // POST api/<HomeController>
         [HttpPost]
-        public JsonResult Post([FromBody] string value)
+        public JsonResult Post([FromBody] string message)
         {
-            return new JsonResult("Value: " + value);
+            return new JsonResult("Value: " + message);
         }
 
         // PUT api/<HomeController>/5

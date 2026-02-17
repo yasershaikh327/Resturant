@@ -11,7 +11,7 @@ function Test(message) {
     $.ajax({
         url:  API.POST,
         method: "POST",
-        data: { value: message },
+        data: JSON.stringify(message),
         success: (res) => console.log("Response:", res),
         error: (err) => console.error(err)
     });
