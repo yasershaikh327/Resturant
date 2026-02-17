@@ -32,3 +32,10 @@ node_modules
 resturant.presentation.client/node_modules
 bin
 obj
+**/node_modules
+**/bin
+**/obj
+.git
+.gitignore
+Dockerfile
+docker-compose*
