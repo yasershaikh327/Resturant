@@ -1,37 +1,33 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
+# ---------- Base Runtime Image ----------
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
-# This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS with-node
-RUN apt-get update
-RUN apt-get install curl
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash
-RUN apt-get -y install nodejs
-
-
-FROM with-node AS build
+# ---------- Build Image ----------
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Resturant.Presentation.Server/Resturant.Presentation.Server.csproj", "Resturant.Presentation.Server/"]
-COPY ["resturant.presentation.client/resturant.presentation.client.esproj", "resturant.presentation.client/"]
-RUN dotnet restore "./Resturant.Presentation.Server/Resturant.Presentation.Server.csproj"
-COPY . .
-WORKDIR "/src/Resturant.Presentation.Server"
-RUN dotnet build "./Resturant.Presentation.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Copy csproj and restore first (better caching)
+COPY Resturant.Presentation.Server.csproj ./
+RUN dotnet restore Resturant.Presentation.Server.csproj
+
+# Copy everything else
+COPY . .
+
+# Build
+RUN dotnet build Resturant.Presentation.Server.csproj -c $BUILD_CONFIGURATION -o /app/build
+
+# ---------- Publish ----------
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Resturant.Presentation.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish Resturant.Presentation.Server.csproj \
+    -c $BUILD_CONFIGURATION \
+    -o /app/publish \
+    /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# ---------- Final Runtime ----------
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
