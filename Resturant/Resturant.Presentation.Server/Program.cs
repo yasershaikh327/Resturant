@@ -1,8 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Add services
 builder.Services.AddControllers();
+
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
@@ -17,22 +17,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.MapStaticAssets();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
+// Middleware order is important!
 app.UseHttpsRedirection();
+
+// **CORS must come before MapControllers**
+app.UseCors("AllowLocalhost");
 
 app.UseAuthorization();
 
@@ -41,7 +34,13 @@ app.MapControllers();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.MapFallbackToFile("index.html");
+// OpenAPI in dev
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
 
+// Fallback for SPA
+app.MapFallbackToFile("index.html");
 
 app.Run();
