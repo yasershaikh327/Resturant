@@ -28,3 +28,7 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+node_modules
+resturant.presentation.client/node_modules
+bin
+obj
